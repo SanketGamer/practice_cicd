@@ -17,13 +17,14 @@ jobs:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 16.16.160.52
+          host: 13.48.28.190
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: |
+            export PATH=$PATH:/usr/bin:/usr/local/bin
             cd /home/ubuntu/practice_cicd
             git pull origin main
             npm install
             npm run build
-            /usr/lib/node_modules/pm2/bin/pm2 restart practice-cicd || /usr/lib/node_modules/pm2/bin/pm2 start npm --name "practice-cicd" -- start
+            pm2 restart practice-cicd || pm2 start npm --name "practice-cicd" -- start
