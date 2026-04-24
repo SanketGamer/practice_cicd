@@ -19,7 +19,7 @@ jobs:
         with:
           host: 13.63.130.4
           username: ubuntu
-          key: ${{ secrets.PRIVATE_SSH_KEY }}
+          key: ${{ secrets.PRIVATE_SSH_KEY_PROD }}
           port: 22
           script: |
             export PATH=$PATH:/usr/bin:/usr/local/bin
