@@ -26,4 +26,4 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            sudo /usr/local/bin/pm2 restart practice-cicd || sudo /usr/local/bin/pm2 start npm --name "practice-cicd" -- start
+            /usr/bin/pm2 restart practice-cicd || /usr/bin/pm2 start npm --name "practice-cicd" -- start
