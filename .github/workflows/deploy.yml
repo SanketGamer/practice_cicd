@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - prod
 
 jobs:
   deploy:
@@ -17,14 +17,14 @@ jobs:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 13.48.28.190
+          host: 13.63.130.4
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: |
             export PATH=$PATH:/usr/bin:/usr/local/bin
             cd /home/ubuntu/practice_cicd
-            git pull origin main
+            git pull origin prod
             npm install
             npm run build
             pm2 restart practice-cicd || pm2 start npm --name "practice-cicd" -- start
