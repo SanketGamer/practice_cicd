@@ -2,7 +2,7 @@ cat > /home/ubuntu/deploy.sh << 'EOF'
 #!/bin/bash
 set -e
 
-cd /home/ubuntu/practice_cicd/my-app
+cd /home/ubuntu/practice_cicd
 
 git pull origin main
 npm install
