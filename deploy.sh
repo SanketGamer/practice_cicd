@@ -9,3 +9,5 @@ npm install
 npm run build
 pm2 restart practice-cicd
 EOF
+
+chmod +x /home/ubuntu/deploy.sh
