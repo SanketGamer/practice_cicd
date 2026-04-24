@@ -14,11 +14,16 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
-      - name: executing remote ssh commands using password
+      - name: executing remote ssh commands
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: 13.48.28.190
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
-          script: bash /home/ubuntu/deploy.sh
+          script: |
+            cd /home/ubuntu/practice_cicd
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart practice-cicd
