@@ -7,24 +7,26 @@ on:
 
 jobs:
   deploy:
-    name: Push to EC2
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: executing remote ssh commands
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: 16.16.206.222
-          username: ubuntu
-          key: ${{ secrets.PRIVATE_SSH_KEY_PROD }}
-          port: 22
-          script: |
-            export PATH=$PATH:/usr/bin:/usr/local/bin
-            cd /home/ubuntu/practice_cicd
-            git pull origin prod
-            npm install
-            npm run build
-            pm2 restart practice-cicd || pm2 start npm --name "practice-cicd" -- start
+      - name: Deploy via SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PRIVATE_SSH_KEY_PROD }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -y -f ~/.ssh/deploy_key
+          ssh -i ~/.ssh/deploy_key \
+              -o StrictHostKeyChecking=no \
+              ubuntu@${{ secrets.EC2_HOST_PROD }} \
+              "cd /home/ubuntu/practice_cicd && \
+               git pull origin prod && \
+               npm install && \
+               npm run build && \
+               pm2 restart practice-cicd || pm2 start npm --name 'practice-cicd' -- start"
+
+      - name: Cleanup
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
