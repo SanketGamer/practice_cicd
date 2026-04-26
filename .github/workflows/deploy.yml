@@ -12,19 +12,22 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 13.63.63.36
+          host: ${{ secrets.PROD_HOST }}
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY_PROD }}
           port: 22
           script: |
+            set -e
             export PATH=$PATH:/usr/bin:/usr/local/bin
             cd /home/ubuntu/practice_cicd
             git pull origin prod
             npm install
             npm run build
-            pm2 restart practice-cicd || pm2 start npm --name "practice-cicd" -- start
+            pm2 describe practice-cicd > /dev/null 2>&1 \
+              && pm2 restart practice-cicd \
+              || pm2 start npm --name "practice-cicd" -- start
